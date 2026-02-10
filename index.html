@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Polyglot Tutor Pro - Final Fix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans pb-40">
+
+    <div class="flex">
+        <div class="w-64 bg-white h-screen fixed left-0 top-0 shadow-lg hidden md:block overflow-y-auto z-30" id="historySidebar">
+            <div class="p-4 border-b bg-blue-50 flex justify-between items-center">
+                <h2 class="font-bold text-blue-700"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</h2>
+                <button onclick="clearHistory()" class="text-xs text-red-500 hover:underline">Xoá</button>
+            </div>
+            <div id="historyList" class="p-2 space-y-2"></div>
+        </div>
+
+        <div class="flex-1 md:ml-64 p-4 md:p-8 transition-all">
+            <h1 class="text-3xl font-extrabold text-center text-blue-700 mb-6 uppercase tracking-wide">
+                <i class="fa-solid fa-earth-americas"></i> AI Language Tutor
+            </h1>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">AI Model</label>
+                        <select id="provider" class="w-full p-2 border rounded"><option value="gemini">Google Gemini</option><option value="openai">ChatGPT (GPT-4o)</option><option value="deepseek">DeepSeek</option></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">API Key</label>
+                        <input type="password" id="apiKey" class="w-full p-2 border rounded" placeholder="Nhập API Key...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ngôn ngữ đích</label>
+                        <select id="targetLang" class="w-full p-2 border rounded">
+                            <option value="Tiếng Nga" data-code="ru">🇷🇺 Tiếng Nga</option>
+                            <option value="Tiếng Anh" data-code="en">🇺🇸 Tiếng Anh</option>
+                            <option value="Tiếng Trung" data-code="zh">🇨🇳 Tiếng Trung</option>
+                            <option value="Tiếng Nhật" data-code="ja">🇯🇵 Tiếng Nhật</option>
+                            <option value="Tiếng Hàn" data-code="ko">🇰🇷 Tiếng Hàn</option>
+                            <option value="Tiếng Pháp" data-code="fr">🇫🇷 Tiếng Pháp</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-2">
+                        <button id="btnText" class="px-4 py-2 bg-blue-600 text-white rounded font-bold transition">Văn bản</button>
+                        <button id="btnImage" class="px-4 py-2 bg-gray-200 text-gray-600 rounded font-bold transition">Hình ảnh</button>
+                    </div>
+                    <button onclick="readQuestion()" class="text-blue-600 hover:bg-blue-50 px-3 py-2 rounded font-bold text-sm border border-blue-200">
+                        <i class="fa-solid fa-volume-high"></i> Đọc câu hỏi
+                    </button>
+                </div>
+                
+                <textarea id="questionInput" class="w-full p-4 border rounded-xl h-32 focus:ring-2 focus:ring-blue-500" placeholder="Nhập đề bài..."></textarea>
+                <div id="imageInputArea" class="hidden border-2 border-dashed border-gray-300 p-6 rounded-xl text-center">
+                    <input type="file" id="imageFile" accept="image/*" class="mx-auto">
+                </div>
+
+                <button id="btnSubmit" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-green-700 transition">
+                    🚀 GIẢI BÀI TẬP
+                </button>
+            </div>
+
+            <!-- <div class="space-y-4">
+                <div class="flex gap-2">
+                    <button id="btnText" class="px-4 py-2 bg-blue-600 text-white rounded font-bold shadow-sm">Văn bản</button>
+                    <button id="btnImage" class="px-4 py-2 bg-gray-200 text-gray-600 rounded font-bold shadow-sm">Hình ảnh</button>
+                </div>
+                
+                <textarea id="questionInput" class="w-full p-4 border rounded-xl h-32 focus:ring-2 focus:ring-blue-500 font-medium" placeholder="Nhập đề bài hoặc từ vựng..."></textarea>
+                <div id="imageInputArea" class="hidden border-2 border-dashed border-gray-300 p-6 rounded-xl text-center">
+                    <input type="file" id="imageFile" accept="image/*" class="mx-auto">
+                </div>
+
+                <button id="btnSubmit" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 rounded-xl shadow-lg transition transform active:scale-95">
+                    🚀 GIẢI BÀI TẬP & PHÂN TÍCH
+                </button>
+            </div> -->
+
+            <!-- <div id="resultArea" class="hidden mt-8 bg-white p-6 rounded-xl shadow-md border relative">
+                <div class="flex justify-between items-center mb-4 border-b pb-2 sticky top-0 bg-white z-10">
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-book-open"></i> Kết quả chi tiết</h2>
+                    <button onclick="copyRichText()" class="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-200 font-bold text-sm transition">
+                        <i class="fa-regular fa-copy"></i> Copy (Giữ định dạng)
+                    </button>
+                </div>
+                <div id="outputContent" class="prose max-w-none text-lg leading-relaxed text-gray-800 selection:bg-yellow-200 selection:text-black"></div>
+            </div> -->
+        
+            <div id="resultArea" class="hidden bg-white p-6 rounded-xl shadow-xl border border-blue-100 relative min-h-[200px]">
+                <div class="flex justify-between items-center mb-4 border-b pb-2 sticky top-0 bg-white z-10">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-book-open text-blue-600"></i> Lời giải</h2>
+                        
+                        <button onclick="readAnswer()" class="text-green-600 bg-green-50 hover:bg-green-100 border border-green-200 px-3 py-1 rounded text-sm font-bold flex items-center gap-2 transition">
+                            <i class="fa-solid fa-circle-play"></i> Đọc lời giải
+                        </button>
+                    </div>
+
+                    <button onclick="copyContent()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded border font-bold text-gray-600 transition">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+                <div id="outputContent" class="prose max-w-none text-lg text-gray-800 leading-relaxed"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="audioPlayer" class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur border-t shadow-[0_-5px_20px_rgba(0,0,0,0.1)] p-3 z-50 hidden flex flex-col md:flex-row justify-between items-center px-6 md:px-12 transition-transform duration-300">
+        <div class="flex items-center gap-3 w-full md:w-auto mb-2 md:mb-0">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <div class="text-sm font-bold text-gray-600 truncate max-w-[200px]" id="readingStatus">Sẵn sàng</div>
+        </div>
+        <div class="text-2xl flex items-center gap-6">
+            <button onclick="window.TTS.startFromBeginning()" class="text-gray-400 hover:text-blue-600" title="Đọc lại"><i class="fa-solid fa-backward-step"></i></button>
+            <button id="btnPlay" class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition"><i class="fa-solid fa-play ml-1"></i></button>
+            <button onclick="stopReading()" class="text-gray-400 hover:text-red-500" title="Dừng hẳn"><i class="fa-solid fa-stop"></i></button>
+        </div>
+    </div>
+
+    <div id="tooltip" class="fixed hidden bg-slate-800 text-white rounded-lg px-4 py-2 z-[9999] shadow-2xl flex gap-4 text-sm items-center transform -translate-x-1/2 border border-slate-600">
+        <div class="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45 border-r border-b border-slate-600"></div>
+        
+        <button id="btnSpeakSel" class="hover:text-yellow-400 flex flex-col items-center gap-1 group">
+            <i class="fa-solid fa-volume-high text-lg group-hover:scale-110 transition"></i>
+            <span class="text-[10px] font-semibold">NGHE</span>
+        </button>
+        <div class="w-px h-6 bg-gray-600"></div>
+        
+        <button id="btnDict" class="hover:text-green-400 flex flex-col items-center gap-1 group">
+            <i class="fa-solid fa-book-atlas text-lg group-hover:scale-110 transition"></i>
+            <span class="text-[10px] font-semibold">V-TỪ ĐIỂN</span>
+        </button>
+        <div class="w-px h-6 bg-gray-600"></div>
+        
+        <button id="btnGoogle" class="hover:text-blue-400 flex flex-col items-center gap-1 group">
+            <i class="fa-brands fa-google text-lg group-hover:scale-110 transition"></i>
+            <span class="text-[10px] font-semibold">GOOGLE</span>
+        </button>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/tts.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
