@@ -291,26 +291,6 @@ if(btnSubmit) {
         - **Từ vựng quan trọng**: Lập bảng gồm: Từ gốc (có trọng âm) - Loại từ - Nghĩa Việt.
         `;
 
-        // --- CÂU LỆNH PROMPT MỚI (TỐI ƯU CHO NGƯỜI VIỆT) ---
-        // const promptText = `
-        // Đóng vai một gia sư ngoại ngữ tận tâm người Việt Nam. Hãy giải bài tập ${targetLang} này cho học sinh Việt Nam.
-        
-        // QUY TẮC QUAN TRỌNG:
-        // 1. **Phong cách giải thích**: Dùng tiếng Việt tự nhiên, dễ hiểu, thân thiện. Tránh dùng thuật ngữ hàn lâm khó hiểu.
-        // 2. **Ngôn ngữ**: 
-        //    - Chỉ sử dụng Tiếng Việt và ${targetLang} (Ví dụ: Tiếng Nga gốc).
-        //    - TUYỆT ĐỐI KHÔNG dùng Tiếng Anh để giải thích (trừ khi bài tập là tiếng Anh).
-        //    - KHÔNG dùng phiên âm Latin cho tiếng Nga (Hãy dùng Cyrillic gốc kèm trọng âm).
-        // 3. **Yêu cầu đặc biệt cho Tiếng Nga**:
-        //    - Bắt buộc thêm dấu trọng âm (U+0301) vào tất cả từ tiếng Nga (VD: э́то, хорошо́).
-        
-        // CẤU TRÚC TRẢ LỜI:
-        // - **Đáp án đúng**: (Ghi rõ ràng).
-        // - **Tại sao chọn?**: Giải thích ngữ pháp/ngữ nghĩa bằng tiếng Việt, so sánh với tiếng Việt nếu có thể để dễ nhớ.
-        // - **Dịch nghĩa**: Dịch cả câu hỏi và đáp án sang tiếng Việt.
-        // - **Từ vựng mở rộng**: Liệt kê các từ mới trong bài (Từ gốc - Phiên âm - Nghĩa Việt).
-        // `;
-
         try {
             let resultText = "";
             let userInput = "";
